@@ -42,6 +42,7 @@ func InitXenditUseCaseInterface(
 	}
 }
 
+// full documentation of Xendit Create Invoice API can be found here: https://developers.xendit.co/api-reference/#create-invoice
 func (u *XenditUseCase) CreateInvoice(request *requests.XenditCreateInvoiceRequest) (*responses.XenditCreateInvoiceResponse, *models.ErrorLog) {
 
 	response := &responses.XenditCreateInvoiceResponse{}
@@ -50,47 +51,45 @@ func (u *XenditUseCase) CreateInvoice(request *requests.XenditCreateInvoiceReque
 	externalId := uuid.New().String()
 	fmt.Println("External ID: ", externalId)
 
-	//// create Customer Address Object
-	//customerAddress := *invoice.NewAddressObject()
-	//customerAddress.SetStreetLine1(request.CustomerAddress)
-	//customerAddress.SetCountry(request.CustomerCountry)
-	//
-	//// create Customer Object
-	//customer := *invoice.NewCustomerObject()
-	//customer.SetId(request.CustomerUUID)
-	//customer.SetGivenNames(request.CustomerName)
-	//customer.SetEmail(request.CustomerEmail)
-	//customer.SetAddresses([]invoice.AddressObject{customerAddress})
-	//customer.SetPhoneNumber(request.CustomerPhoneNumber)
-	//
-	//// create invoice items
-	//totalAmount := float64(0)
-	//invoiceItems := []invoice.InvoiceItem{}
-	//if len(request.InvoiceItems) > 0 {
-	//	for _, item := range request.InvoiceItems {
-	//		invoiceItem := invoice.InvoiceItem{
-	//			Name:     item.Name,
-	//			Price:    item.Price,
-	//			Quantity: float32(item.Quantity),
-	//			Url:      &item.Url,
-	//		}
-	//
-	//		totalAmount += float64(item.Price * float32(item.Quantity))
-	//		invoiceItems = append(invoiceItems, invoiceItem)
-	//	}
-	//}
-	//
-	//createInvoiceRequest := invoice.CreateInvoiceRequest{
-	//	ExternalId:         externalId,
-	//	Amount:             float64(totalAmount),
-	//	Description:        &request.Description,
-	//	Customer:           &customer,
-	//	SuccessRedirectUrl: u.SuccessRedirectURL,
-	//	FailureRedirectUrl: u.FailureRedirectURL,
-	//	Items:              invoiceItems,
-	//}
+	// create Customer Address Object
+	customerAddress := *invoice.NewAddressObject()
+	customerAddress.SetStreetLine1(request.CustomerAddress)
+	customerAddress.SetCountry(request.CustomerCountry)
 
-	createInvoiceRequest := *invoice.NewCreateInvoiceRequest(externalId, float64(123))
+	// create Customer Object
+	customer := *invoice.NewCustomerObject()
+	customer.SetId(request.CustomerUUID)
+	customer.SetGivenNames(request.CustomerName)
+	customer.SetEmail(request.CustomerEmail)
+	customer.SetAddresses([]invoice.AddressObject{customerAddress})
+	customer.SetPhoneNumber(request.CustomerPhoneNumber)
+
+	// create invoice items
+	totalAmount := float64(0)
+	invoiceItems := []invoice.InvoiceItem{}
+	if len(request.InvoiceItems) > 0 {
+		for _, item := range request.InvoiceItems {
+			invoiceItem := invoice.InvoiceItem{
+				Name:     item.Name,
+				Price:    item.Price,
+				Quantity: float32(item.Quantity),
+				Url:      &item.Url,
+			}
+
+			totalAmount += float64(item.Price * float32(item.Quantity))
+			invoiceItems = append(invoiceItems, invoiceItem)
+		}
+	}
+
+	createInvoiceRequest := invoice.CreateInvoiceRequest{
+		ExternalId:         externalId,
+		Amount:             float64(totalAmount),
+		Description:        &request.Description,
+		Customer:           &customer,
+		SuccessRedirectUrl: u.SuccessRedirectURL,
+		FailureRedirectUrl: u.FailureRedirectURL,
+		Items:              invoiceItems,
+	}
 
 	resp, r, errorXenditSdk := u.XenditClient.InvoiceApi.CreateInvoice(u.ctx).
 		CreateInvoiceRequest(createInvoiceRequest).
