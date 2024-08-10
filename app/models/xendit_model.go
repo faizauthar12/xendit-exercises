@@ -37,3 +37,11 @@ type XenditInvoice struct {
 	Updated                 time.Time                          `json:"updated"`
 	UserID                  string                             `json:"user_id"`
 }
+
+type XenditCustomer struct {
+	GivenName    string `json:"given_name"`
+	Surname      string `json:"surname"`
+	Email        string `json:"email"`
+	MobileNumber string `json:"mobile_number"`
+	Addresses    string `json:"addresses"`
+}

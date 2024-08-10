@@ -36,6 +36,7 @@ func Routes(
 	})
 
 	mux.HandleFunc("POST /invoices", ctrl.xenditController.CreateInvoice)
+	mux.HandleFunc("GET /invoices", ctrl.xenditController.GetInvoices)
 
 	return mux
 }

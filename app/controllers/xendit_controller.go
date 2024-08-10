@@ -10,6 +10,7 @@ import (
 
 type XenditControllerInterface interface {
 	CreateInvoice(w http.ResponseWriter, r *http.Request)
+	GetInvoices(w http.ResponseWriter, r *http.Request)
 }
 
 type XenditController struct {
@@ -52,6 +53,34 @@ func (c *XenditController) CreateInvoice(w http.ResponseWriter, r *http.Request)
 	}
 
 	response.Data = invoice
+	response.StatusCode = http.StatusOK
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(utils.WriteResponseBody(response))
+}
+
+func (c *XenditController) GetInvoices(w http.ResponseWriter, r *http.Request) {
+	response := models.Response{}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE, PATCH")
+
+	request, errorLog := c.XenditValidator.GetInvoicesValidator(r)
+	if errorLog.Error != nil {
+		w.WriteHeader(http.StatusOK)
+		w.Write(utils.WriteResponseBody(errorLog))
+		return
+	}
+
+	invoices, errorLog := c.XenditUseCase.GetInvoices(request)
+	if errorLog.Error != nil {
+		response.Error = errorLog
+		w.WriteHeader(http.StatusOK)
+		w.Write(utils.WriteResponseBody(response))
+		return
+	}
+
+	response.Data = invoices
 	response.StatusCode = http.StatusOK
 
 	w.WriteHeader(http.StatusOK)
