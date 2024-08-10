@@ -54,6 +54,7 @@ func (c *XenditController) CreateInvoice(w http.ResponseWriter, r *http.Request)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(utils.WriteResponseBody(response))
+	return
 }
 
 func (c *XenditController) GetInvoices(w http.ResponseWriter, r *http.Request) {
@@ -79,4 +80,5 @@ func (c *XenditController) GetInvoices(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(utils.WriteResponseBody(response))
+	return
 }
