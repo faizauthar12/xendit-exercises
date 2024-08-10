@@ -3,6 +3,7 @@ package middlewares
 import (
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func RecoverPanic(next http.Handler) http.Handler {
@@ -19,8 +20,19 @@ func RecoverPanic(next http.Handler) http.Handler {
 
 func LogRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("%s - %s %s %s\n", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
+		start := time.Now()
+
 		next.ServeHTTP(w, r)
+		duration := time.Since(start)
+
+		fmt.Printf(
+			"%s - %s %s %s | Duration: %s\n",
+			r.RemoteAddr,
+			r.Proto,
+			r.Method,
+			r.URL.RequestURI(),
+			duration,
+		)
 	})
 }
 
