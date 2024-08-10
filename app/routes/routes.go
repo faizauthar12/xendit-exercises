@@ -2,8 +2,10 @@ package routes
 
 import (
 	"context"
+	"github.com/justinas/alice"
 	"net/http"
 	"xendit-exercises/app/controllers"
+	"xendit-exercises/app/middlewares"
 	"xendit-exercises/app/models"
 	"xendit-exercises/app/utils"
 
@@ -38,5 +40,7 @@ func Routes(
 	mux.HandleFunc("POST /invoices", ctrl.xenditController.CreateInvoice)
 	mux.HandleFunc("GET /invoices", ctrl.xenditController.GetInvoices)
 
-	return mux
+	middleware := alice.New(middlewares.CORSMiddleware, middlewares.RecoverPanic, middlewares.LogRequest)
+
+	return middleware.ThenFunc(mux.ServeHTTP)
 }

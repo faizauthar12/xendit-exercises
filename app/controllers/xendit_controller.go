@@ -34,9 +34,6 @@ func InitXenditControllerInterface(
 func (c *XenditController) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 	response := models.Response{}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE, PATCH")
-
 	request, errorLog := c.XenditValidator.CreateInvoiceValidator(r)
 	if errorLog.Error != nil {
 		w.WriteHeader(http.StatusOK)
@@ -61,9 +58,6 @@ func (c *XenditController) CreateInvoice(w http.ResponseWriter, r *http.Request)
 
 func (c *XenditController) GetInvoices(w http.ResponseWriter, r *http.Request) {
 	response := models.Response{}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE, PATCH")
 
 	request, errorLog := c.XenditValidator.GetInvoicesValidator(r)
 	if errorLog.Error != nil {
