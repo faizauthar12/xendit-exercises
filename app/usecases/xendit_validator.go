@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"xendit-exercises/app/models"
 	"xendit-exercises/app/requests"
@@ -11,6 +12,7 @@ import (
 type XenditValidatorInterface interface {
 	CreateInvoiceValidator(r *http.Request) (*requests.XenditCreateInvoiceRequest, *models.ErrorLog)
 	GetInvoicesValidator(r *http.Request) (*requests.XenditGetInvoiceRequest, *models.ErrorLog)
+	PostWebhook(r *http.Request) *models.ErrorLog
 }
 
 type XenditValidator struct{}
@@ -49,4 +51,13 @@ func (v *XenditValidator) GetInvoicesValidator(r *http.Request) (*requests.Xendi
 
 	request = decodedRequest
 	return request, &models.ErrorLog{}
+}
+
+func (v *XenditValidator) PostWebhook(r *http.Request) *models.ErrorLog {
+
+	// print json of r.body
+	rBodyJson, _ := json.Marshal(r.Body)
+	fmt.Println("r.Body: ", string(rBodyJson))
+
+	return &models.ErrorLog{}
 }

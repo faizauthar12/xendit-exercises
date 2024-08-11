@@ -11,6 +11,7 @@ import (
 type XenditControllerInterface interface {
 	CreateInvoice(w http.ResponseWriter, r *http.Request)
 	GetInvoices(w http.ResponseWriter, r *http.Request)
+	PostWebhook(w http.ResponseWriter, r *http.Request)
 }
 
 type XenditController struct {
@@ -80,5 +81,18 @@ func (c *XenditController) GetInvoices(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(utils.WriteResponseBody(response))
+	return
+}
+
+func (c *XenditController) PostWebhook(w http.ResponseWriter, r *http.Request) {
+	errorLog := c.XenditValidator.PostWebhook(r)
+	if errorLog.Error != nil {
+		w.WriteHeader(http.StatusOK)
+		w.Write(utils.WriteResponseBody(errorLog))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(utils.WriteResponseBody(models.Response{}))
 	return
 }

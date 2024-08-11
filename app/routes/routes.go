@@ -39,6 +39,7 @@ func Routes(
 
 	mux.HandleFunc("POST /invoices", ctrl.xenditController.CreateInvoice)
 	mux.HandleFunc("GET /invoices", ctrl.xenditController.GetInvoices)
+	mux.HandleFunc("POST /webhook", ctrl.xenditController.PostWebhook)
 
 	middleware := alice.New(middlewares.CORSMiddleware, middlewares.RecoverPanic, middlewares.LogRequest)
 

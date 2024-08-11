@@ -45,3 +45,26 @@ type XenditCustomer struct {
 	MobileNumber string `json:"mobile_number"`
 	Addresses    string `json:"addresses"`
 }
+
+type XenditInvoiceWebhook struct {
+	ID                     string    `json:"id"`
+	ExternalID             string    `json:"external_id"`
+	UserID                 string    `json:"user_id"`
+	IsHigh                 bool      `json:"is_high"`
+	PaymentMethod          string    `json:"payment_method"`
+	Status                 string    `json:"status"`
+	MerchantName           string    `json:"merchant_name"`
+	Amount                 int64     `json:"amount"`
+	PaidAmount             int64     `json:"paid_amount"`
+	BankCode               string    `json:"bank_code"`
+	PaidAt                 time.Time `json:"paid_at"`
+	PayerEmail             string    `json:"payer_email"`
+	Description            string    `json:"description"`
+	AdjustedReceivedAmount int64     `json:"adjusted_received_amount"`
+	FeesPaidAmount         int64     `json:"fees_paid_amount"`
+	Updated                time.Time `json:"updated"`
+	Created                time.Time `json:"created"`
+	Currency               string    `json:"currency"`
+	PaymentChannel         string    `json:"payment_channel"`
+	PaymentDestination     string    `json:"payment_destination"`
+}
